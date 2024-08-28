@@ -15,20 +15,22 @@ const Register = () => {
     const password = form.password.value;
 
     // Function to upload image to ImgBB
-  const uploadImageToImgBB = async(imageFile) => {
-    const imageData = new FormData()
-    const imageMain = imageData.append('image', imageFile)
+    const uploadImageToImgBB = async (imageFile) => {
+      const formData = await new FormData()
+      formData.append('image', imageFile)
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?${imageAPI}`,{
-      method: 'POST',
-      body: imageMain
-    })
-    const data = await response.json()
-    if(data.success) {
-      return data.data.url
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${imageAPI}`,{
+        method: 'POST',
+        body: formData,
+      })
+      const data = await response.json()
+      if(data.success) {
+        return data.data.url
+      } else {
+        throw new Error (`Could not upload image`)
+      }
     }
 
-  }
     try {
       // Create user in Firebase
       const result = await createUser(email, password);
